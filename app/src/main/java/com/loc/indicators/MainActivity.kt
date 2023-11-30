@@ -6,6 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -30,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import com.loc.indicators.indicator.Dot
 import com.loc.indicators.indicator.Indicator
 import com.loc.indicators.indicator2.Indicator2
+import com.loc.indicators.indicator2.rememberIndicatorState
 import com.loc.indicators.ui.theme.IndicatorsTheme
 import kotlinx.coroutines.launch
 
@@ -38,57 +40,44 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val dots = listOf(
-            Dot(Color.Gray,"0"), Dot(Color.Gray,"1"), Dot(Color.Gray,"2"),
-            Dot(Color.Gray,"0"), Dot(Color.Gray,"1"), Dot(Color.Gray,"2"),
-            Dot(Color.Gray,"0"), Dot(Color.Gray,"1"), Dot(Color.Gray,"2"),
-            Dot(Color.Gray,"0"), Dot(Color.Gray,"1"), Dot(Color.Gray,"2"),
-            Dot(Color.Gray,"0"), Dot(Color.Gray,"1"), Dot(Color.Gray,"2"),
-            Dot(Color.Gray,"0"), Dot(Color.Gray,"1"), Dot(Color.Gray,"2"),
-            Dot(Color.Gray,"0"), Dot(Color.Gray,"1"), Dot(Color.Gray,"2"),
-            Dot(Color.Gray,"0"), Dot(Color.Gray,"1"), Dot(Color.Gray,"2"),
-            Dot(Color.Gray,"0"), Dot(Color.Gray,"1"), Dot(Color.Gray,"2"),
-            Dot(Color.Gray,"0"), Dot(Color.Gray,"1"), Dot(Color.Gray,"2"),
+            Dot(Color.Gray), Dot(Color.Gray),Dot(Color.Gray),Dot(Color.Gray),Dot(Color.Gray),
+            Dot(Color.Gray), Dot(Color.Gray),Dot(Color.Gray),Dot(Color.Gray),Dot(Color.Gray),
+            Dot(Color.Gray), Dot(Color.Gray),Dot(Color.Gray),Dot(Color.Gray),Dot(Color.Gray),
+            Dot(Color.Gray), Dot(Color.Gray),Dot(Color.Gray),Dot(Color.Gray),Dot(Color.Gray),
         )
         setContent {
             IndicatorsTheme {
-                val pagerState = rememberPagerState { dots.size }
-                var selectedItem by remember {
-                    mutableStateOf(0)
-                }
                 Row(
                     modifier = Modifier.fillMaxSize(),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     val scope = rememberCoroutineScope()
+                    val state = rememberIndicatorState(dots = dots)
                     TextButton(onClick = {
                         scope.launch {
-                            selectedItem = (selectedItem - 1).coerceIn(0, dots.size - 1)
-
+                            state.movePrevious()
                         }
                     }) {
                         Text(text = "Previous")
                     }
-
                     Column(
                         modifier = Modifier
-                            .weight(1f)
-                            .padding(horizontal = 20.dp),
+                            .weight(1f),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Text(text = "${selectedItem + 1} of ${dots.size}")
+                        Text(text = "${state.currentDot + 1} of ${dots.size}")
                         Spacer(modifier = Modifier.height(5.dp))
 
                         Indicator2(
-                            dots = dots,
-                            selectedDotSize = 15.dp,
-                            selectedDotIndex = selectedItem
+                            modifier = Modifier.padding(horizontal = 15.dp),
+                            state = state,
                         )
                     }
 
                     TextButton(onClick = {
                         scope.launch {
-                            selectedItem = (selectedItem + 1).coerceIn(0, dots.size - 1)
+                            state.moveNext()
                         }
                     }) {
                         Text(text = "Next")

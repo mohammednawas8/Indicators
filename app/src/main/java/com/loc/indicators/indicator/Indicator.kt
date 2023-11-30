@@ -27,11 +27,11 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
 import androidx.compose.ui.unit.toSize
+import com.loc.indicators.indicator2.getDistancePercentage
 import kotlin.math.abs
 
 data class Dot(
     val color: Color,
-    val name: String = "" // TODO remove it
 )
 
 data class DotSizes(
@@ -84,9 +84,7 @@ fun Indicator(
     }
 }
 
-fun getDistancePercentage(distance: Int): Float {
-    return 1f - distance.toFloat() / 10f
-}
+
 
 
 @Composable
