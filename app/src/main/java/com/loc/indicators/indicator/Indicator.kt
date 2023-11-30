@@ -30,7 +30,8 @@ import androidx.compose.ui.unit.toSize
 import kotlin.math.abs
 
 data class Dot(
-    val color: Color
+    val color: Color,
+    val name: String = "" // TODO remove it
 )
 
 data class DotSizes(

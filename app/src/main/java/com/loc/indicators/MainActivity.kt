@@ -38,17 +38,16 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val dots = listOf(
-            Dot(Color.Gray), Dot(Color.Gray), Dot(Color.Gray),
-            Dot(Color.Gray), Dot(Color.Gray), Dot(Color.Gray),
-            Dot(Color.Gray), Dot(Color.Gray), Dot(Color.Gray),
-            Dot(Color.Gray), Dot(Color.Gray), Dot(Color.Gray),
-            Dot(Color.Gray), Dot(Color.Gray), Dot(Color.Gray),
-            Dot(Color.Gray), Dot(Color.Gray), Dot(Color.Gray),
-            Dot(Color.Gray), Dot(Color.Gray), Dot(Color.Gray),
-            Dot(Color.Gray), Dot(Color.Gray), Dot(Color.Gray),
-            Dot(Color.Gray), Dot(Color.Gray), Dot(Color.Gray),
-            Dot(Color.Gray), Dot(Color.Gray), Dot(Color.Gray),
-            Dot(Color.Gray), Dot(Color.Gray), Dot(Color.Gray),
+            Dot(Color.Gray,"0"), Dot(Color.Gray,"1"), Dot(Color.Gray,"2"),
+            Dot(Color.Gray,"0"), Dot(Color.Gray,"1"), Dot(Color.Gray,"2"),
+            Dot(Color.Gray,"0"), Dot(Color.Gray,"1"), Dot(Color.Gray,"2"),
+            Dot(Color.Gray,"0"), Dot(Color.Gray,"1"), Dot(Color.Gray,"2"),
+            Dot(Color.Gray,"0"), Dot(Color.Gray,"1"), Dot(Color.Gray,"2"),
+            Dot(Color.Gray,"0"), Dot(Color.Gray,"1"), Dot(Color.Gray,"2"),
+            Dot(Color.Gray,"0"), Dot(Color.Gray,"1"), Dot(Color.Gray,"2"),
+            Dot(Color.Gray,"0"), Dot(Color.Gray,"1"), Dot(Color.Gray,"2"),
+            Dot(Color.Gray,"0"), Dot(Color.Gray,"1"), Dot(Color.Gray,"2"),
+            Dot(Color.Gray,"0"), Dot(Color.Gray,"1"), Dot(Color.Gray,"2"),
         )
         setContent {
             IndicatorsTheme {
