@@ -82,7 +82,6 @@ class MainActivity : ComponentActivity() {
                         Indicator2(
                             dots = dots,
                             selectedDotSize = 15.dp,
-                            unselectedDotSize = 10.dp,
                             selectedDotIndex = selectedItem
                         )
                     }

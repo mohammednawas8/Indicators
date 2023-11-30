@@ -22,7 +22,6 @@ fun Indicator2(
     spacing: Dp = 5.dp,
     selectedDotIndex: Int,
     selectedDotSize: Dp = 15.dp,
-    unselectedDotSize: Dp = 15.dp,
 ) {
     Layout(
         modifier = modifier.clipToBounds(),
@@ -37,7 +36,7 @@ fun Indicator2(
                 val maxItemWidth = placeables.maxOfOrNull { it.width } ?: 0
                 val originPosition =
                     constraints.maxWidth.div(2f) - maxItemWidth.div(2)
-                var rightItemsWidth = spacing.roundToPx()
+                var rightItemsWidth = 0
 
                 //Left dots
                 var leftItemsWidth = 0
@@ -54,10 +53,9 @@ fun Indicator2(
                 //Right dots
                 placeables.subList(selectedDotIndex + 1,placeables.size).forEachIndexed { distance, placeable ->
                     val yPosition = height / 2 - placeable.height / 2
-                    val xPosition =
-                                (distance + 1).times(spacing.roundToPx()) + rightItemsWidth + (selectedDotSize - unselectedDotSize).roundToPx() / 2
-                            placeable.place(x = constraints.maxWidth / 2 + xPosition, y = yPosition)
-                            rightItemsWidth += placeable.width
+                    val xPosition = originPosition + placeable.width + rightItemsWidth + spacing.roundToPx()
+                            placeable.place(x = xPosition.roundToInt(), y = yPosition)
+                            rightItemsWidth += placeable.width + spacing.roundToPx()
                 }
             }
         },
@@ -73,3 +71,5 @@ fun Indicator2(
         }
     )
 }
+
+
