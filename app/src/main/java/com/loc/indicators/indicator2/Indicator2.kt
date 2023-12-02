@@ -1,5 +1,6 @@
 package com.loc.indicators.indicator2
 
+import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
@@ -58,8 +59,9 @@ fun Indicator2(
                 // We only animate the selected dot
                 val animatedSize by animateDpAsState(
                     targetValue = if (state.currentDot == index) selectedDotSize else selectedDotSize / 2,
-                    animationSpec = tween(150, easing = LinearOutSlowInEasing), label = ""
+                    animationSpec = tween(150, easing = LinearEasing), label = "",
                 )
+
                 Dot(
                     size = if (state.currentDot == index) animatedSize else selectedDotSize * percentage,
                     color = dot.color
@@ -109,12 +111,14 @@ fun Indicator2(
         }
     )
 }
+// These calculations will show 7 dots on each half
 fun getDistancePercentage(distance: Int): Float {
     return when (distance) {
         in 1..3 -> 0.7f
         4 -> 0.5f
         5 -> 0.35f
         6 -> 0.2f
-        else -> 0.1f
+        7 -> 0.1f
+        else -> 0f
     }
 }
