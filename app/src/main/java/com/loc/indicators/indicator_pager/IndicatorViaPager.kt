@@ -1,4 +1,4 @@
-package com.loc.indicators.indicator
+package com.loc.indicators.indicator_pager
 
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -18,7 +18,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
@@ -26,24 +25,19 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
 import androidx.compose.ui.unit.toSize
+import com.loc.indicators.Dot
 import com.loc.indicators.getDistancePercentage
 import kotlin.math.abs
 
-data class Dot(
-    val color: Color,
-)
-
-data class DotSizes(
-    val selectedDot: Dp = 15.dp,
-)
-
-
+/**
+ * It has the unequaled spacing issue
+ */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun Indicator(
+fun IndicatorViaPager(
     modifier: Modifier = Modifier,
-    dots: List<com.loc.indicators.indicator2.Dot>,
-    dotSizes: DotSizes = DotSizes(),
+    dots: List<Dot>,
+    selectedDotSize: Dp = 15.dp,
     pagerState: PagerState,
     spacing: Dp = 10.dp
 ) {
@@ -61,16 +55,16 @@ fun Indicator(
         state = pagerState,
         userScrollEnabled = false,
         verticalAlignment = Alignment.CenterVertically,
-        pageSize = PageSize.Fixed(dotSizes.selectedDot),
+        pageSize = PageSize.Fixed(selectedDotSize),
         contentPadding = PaddingValues(horizontal = indicatorWidth.div(2)),
         pageSpacing = spacing,
     ) { currentIndex ->
         val distance = abs(currentIndex - pagerState.currentPage)
-        Box(modifier = Modifier.size(dotSizes.selectedDot), contentAlignment = Alignment.Center) {
-            val percentage = getDistancePercentage(distance,7)
-            val unselectedDotSize = percentage * dotSizes.selectedDot
+        Box(modifier = Modifier.size(selectedDotSize), contentAlignment = Alignment.Center) {
+            val percentage = getDistancePercentage(distance)
+            val unselectedDotSize = percentage * selectedDotSize
             val size by animateDpAsState(
-                targetValue = if (distance == 0) dotSizes.selectedDot else unselectedDotSize,
+                targetValue = if (distance == 0) selectedDotSize else unselectedDotSize,
                 label = "Dot size animation"
             )
             Dot(
@@ -79,17 +73,4 @@ fun Indicator(
             )
         }
     }
-}
-
-
-
-
-@Composable
-fun Dot(modifier: Modifier = Modifier, size: Dp, color: Color) {
-    Box(
-        modifier = modifier
-            .size(size)
-            .clip(CircleShape)
-            .background(color)
-    )
 }

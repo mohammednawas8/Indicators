@@ -20,22 +20,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.loc.indicators.indicator.Indicator
-import com.loc.indicators.indicator2.Dot
-import com.loc.indicators.indicator2.Indicator2
-import com.loc.indicators.indicator2.rememberIndicatorState
-import com.loc.indicators.indicator3.Indicator3
-import com.loc.indicators.indicator3.rememberIndicator3State
+import com.loc.indicators.indicator_pager.IndicatorViaPager
+import com.loc.indicators.indicator_custom_layout.IndicatorViaCustomLayout
+import com.loc.indicators.indicator_custom_layout.rememberIndicatorViaCustomLayoutState
+import com.loc.indicators.indicator_lazy_row.IndicatorViaLazyRow
+import com.loc.indicators.indicator_lazy_row.rememberIndicatorViaLazyRowState
 import com.loc.indicators.ui.theme.IndicatorsTheme
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val dots = (1..3000).map { Dot(Color.Gray,"$it") }
+        val dots = (1..3000).map { Dot(Color.Gray) }
         setContent {
             IndicatorsTheme {
-                Indicator3Sample(dots = dots)
+                IndicatorViaLazyRowSample(dots = dots)
             }
         }
     }
@@ -43,7 +42,7 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun Indicator1Sample(dots: List<Dot>) {
+fun IndicatorViaPagerSample(dots: List<Dot>) {
     Row(
         modifier = Modifier.fillMaxSize(),
         verticalAlignment = Alignment.CenterVertically,
@@ -69,8 +68,7 @@ fun Indicator1Sample(dots: List<Dot>) {
         ) {
             Text(text = "${pagerState.currentPage + 1} of ${dots.size}")
             Spacer(modifier = Modifier.height(5.dp))
-
-            Indicator(
+            IndicatorViaPager(
                 dots = dots,
                 pagerState = pagerState
             )
@@ -90,13 +88,13 @@ fun Indicator1Sample(dots: List<Dot>) {
 
 
 @Composable
-fun Indicator2Sample(dots: List<Dot>) {
+fun IndicatorViaCustomLayoutSample(dots: List<Dot>) {
     Row(
         modifier = Modifier.fillMaxSize(),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        val state = rememberIndicatorState(dots = dots)
+        val state = rememberIndicatorViaCustomLayoutState(dots = dots)
         TextButton(
             onClick = {
             state.movePrevious()
@@ -111,7 +109,7 @@ fun Indicator2Sample(dots: List<Dot>) {
             Text(text = "${state.currentDot + 1} of ${dots.size}")
             Spacer(modifier = Modifier.height(5.dp))
 
-            Indicator2(
+            IndicatorViaCustomLayout(
                 modifier = Modifier.padding(horizontal = 15.dp),
                 state = state
             )
@@ -126,13 +124,13 @@ fun Indicator2Sample(dots: List<Dot>) {
 }
 
 @Composable
-fun Indicator3Sample(dots: List<Dot>) {
+fun IndicatorViaLazyRowSample(dots: List<Dot>) {
     Row(
         modifier = Modifier.fillMaxSize(),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        val state = rememberIndicator3State(dots = dots, initialSelectedDotIndex = 0)
+        val state = rememberIndicatorViaLazyRowState(dots = dots, initialSelectedDotIndex = 0)
         val scope = rememberCoroutineScope()
         TextButton(
             onClick = {
@@ -149,8 +147,7 @@ fun Indicator3Sample(dots: List<Dot>) {
         ) {
             Text(text = "${state.currentDot + 1} of ${dots.size}")
             Spacer(modifier = Modifier.height(5.dp))
-
-            Indicator3(
+            IndicatorViaLazyRow(
                 modifier = Modifier.padding(horizontal = 0.dp),
                 state = state,
 

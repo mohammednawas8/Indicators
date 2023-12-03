@@ -1,11 +1,6 @@
-package com.loc.indicators.indicator3
+package com.loc.indicators.indicator_lazy_row
 
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.animate
 import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.animateSizeAsState
-import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -25,7 +20,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
@@ -35,15 +29,13 @@ import androidx.compose.ui.unit.times
 import androidx.compose.ui.unit.toSize
 import com.loc.indicators.Dot
 import com.loc.indicators.getDistancePercentage
-import com.loc.indicators.indicator2.Dot
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlin.math.abs
 
-// TODO : Save the states in  configuration changes
-class Indicator3State(
+class IndicatorViaLazyRowState(
     initialSelectedDotIndex: Int,
     val totalDots: List<Dot>,
     val lazyListState: LazyListState
@@ -76,22 +68,23 @@ class Indicator3State(
 }
 
 @Composable
-fun rememberIndicator3State(
+fun rememberIndicatorViaLazyRowState(
     initialSelectedDotIndex: Int = 0,
     dots: List<Dot>,
     lazyListState: LazyListState = rememberLazyListState()
-): Indicator3State {
+): IndicatorViaLazyRowState {
     val state = remember {
-        Indicator3State(initialSelectedDotIndex, dots, lazyListState)
+        IndicatorViaLazyRowState(initialSelectedDotIndex, dots, lazyListState)
     }
     return state
 }
 
 @Composable
-fun Indicator3(
+fun IndicatorViaLazyRow(
     modifier: Modifier = Modifier,
-    selectedDotSize: Dp = 15.dp,
-    state: Indicator3State,
+    selectedDotSize: Dp = 17.dp,
+    state: IndicatorViaLazyRowState,
+    spacing: Dp = 8.dp
 ) {
     val animationDuration = 200
     var horizontalContentPadding by remember {
@@ -103,13 +96,11 @@ fun Indicator3(
             .height(selectedDotSize)
             .onGloballyPositioned {
                 with(density) {
-                    horizontalContentPadding = it.size.toSize().width
-                        .toDp()
-                        .div(2)
+                    horizontalContentPadding = it.size.toSize().width.toDp().div(2) - selectedDotSize.div(2)
                 }
             },
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(10.dp),
+        horizontalArrangement = Arrangement.spacedBy(spacing),
         contentPadding = PaddingValues(horizontal = horizontalContentPadding),
         state = state.lazyListState
     ) {
