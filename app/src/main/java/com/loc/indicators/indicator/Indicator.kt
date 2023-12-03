@@ -35,7 +35,6 @@ data class Dot(
 
 data class DotSizes(
     val selectedDot: Dp = 15.dp,
-    val unselectedDot: Dp = 13.dp,
 )
 
 
@@ -46,7 +45,7 @@ fun Indicator(
     dots: List<com.loc.indicators.indicator2.Dot>,
     dotSizes: DotSizes = DotSizes(),
     pagerState: PagerState,
-    spacing: Dp = 5.dp
+    spacing: Dp = 10.dp
 ) {
     var indicatorWidth by remember {
         mutableStateOf(0.dp)
@@ -58,8 +57,7 @@ fun Indicator(
                 indicatorWidth = with(density) {
                     it.size.toSize().width.toDp()
                 }
-            }
-            .clipToBounds(),
+            },
         state = pagerState,
         userScrollEnabled = false,
         verticalAlignment = Alignment.CenterVertically,
@@ -69,8 +67,8 @@ fun Indicator(
     ) { currentIndex ->
         val distance = abs(currentIndex - pagerState.currentPage)
         Box(modifier = Modifier.size(dotSizes.selectedDot), contentAlignment = Alignment.Center) {
-            val percentage = getDistancePercentage(distance)
-            val unselectedDotSize = percentage * dotSizes.unselectedDot
+            val percentage = getDistancePercentage(distance,7)
+            val unselectedDotSize = percentage * dotSizes.selectedDot
             val size by animateDpAsState(
                 targetValue = if (distance == 0) dotSizes.selectedDot else unselectedDotSize,
                 label = "Dot size animation"

@@ -24,17 +24,18 @@ import com.loc.indicators.indicator.Indicator
 import com.loc.indicators.indicator2.Dot
 import com.loc.indicators.indicator2.Indicator2
 import com.loc.indicators.indicator2.rememberIndicatorState
+import com.loc.indicators.indicator3.Indicator3
+import com.loc.indicators.indicator3.rememberIndicator3State
 import com.loc.indicators.ui.theme.IndicatorsTheme
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
-    @OptIn(ExperimentalFoundationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val dots = (1..30).map { Dot(Color.Gray,"$it") }
+        val dots = (1..3000).map { Dot(Color.Gray,"$it") }
         setContent {
             IndicatorsTheme {
-                Indicator2Sample(dots = dots)
+                Indicator3Sample(dots = dots)
             }
         }
     }
@@ -70,7 +71,6 @@ fun Indicator1Sample(dots: List<Dot>) {
             Spacer(modifier = Modifier.height(5.dp))
 
             Indicator(
-                modifier = Modifier.padding(horizontal = 15.dp),
                 dots = dots,
                 pagerState = pagerState
             )
@@ -89,7 +89,6 @@ fun Indicator1Sample(dots: List<Dot>) {
 }
 
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun Indicator2Sample(dots: List<Dot>) {
     Row(
@@ -120,6 +119,47 @@ fun Indicator2Sample(dots: List<Dot>) {
 
         TextButton(onClick = {
             state.moveNext()
+        }) {
+            Text(text = "Next")
+        }
+    }
+}
+
+@Composable
+fun Indicator3Sample(dots: List<Dot>) {
+    Row(
+        modifier = Modifier.fillMaxSize(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        val state = rememberIndicator3State(dots = dots, initialSelectedDotIndex = 0)
+        val scope = rememberCoroutineScope()
+        TextButton(
+            onClick = {
+                scope.launch {
+                    state.movePrevious()
+                }
+            }) {
+            Text(text = "Previous")
+        }
+        Column(
+            modifier = Modifier
+                .weight(1f),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(text = "${state.currentDot + 1} of ${dots.size}")
+            Spacer(modifier = Modifier.height(5.dp))
+
+            Indicator3(
+                modifier = Modifier.padding(horizontal = 0.dp),
+                state = state,
+
+            )
+        }
+        TextButton(onClick = {
+            scope.launch {
+                state.moveNext()
+            }
         }) {
             Text(text = "Next")
         }
