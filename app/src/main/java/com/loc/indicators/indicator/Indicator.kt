@@ -1,6 +1,5 @@
 package com.loc.indicators.indicator
 
-import android.util.Log
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -27,7 +26,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
 import androidx.compose.ui.unit.toSize
-import com.loc.indicators.indicator2.getDistancePercentage
+import com.loc.indicators.getDistancePercentage
 import kotlin.math.abs
 
 data class Dot(
@@ -44,7 +43,7 @@ data class DotSizes(
 @Composable
 fun Indicator(
     modifier: Modifier = Modifier,
-    dots: List<Dot>,
+    dots: List<com.loc.indicators.indicator2.Dot>,
     dotSizes: DotSizes = DotSizes(),
     pagerState: PagerState,
     spacing: Dp = 5.dp
