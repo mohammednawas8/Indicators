@@ -31,7 +31,7 @@ import kotlinx.coroutines.launch
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val dots = (1..3000).map { Dot(Color.Gray) }
+        val dots = listOf(Dot(Color.Gray),Dot(Color.Gray),Dot(Color.Gray))
         setContent {
             IndicatorsTheme {
                 IndicatorViaLazyRowSample(dots = dots)
@@ -150,7 +150,6 @@ fun IndicatorViaLazyRowSample(dots: List<Dot>) {
             IndicatorViaLazyRow(
                 modifier = Modifier.padding(horizontal = 0.dp),
                 state = state,
-
             )
         }
         TextButton(onClick = {

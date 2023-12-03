@@ -1,5 +1,6 @@
 package com.loc.indicators.indicator_lazy_row
 
+import android.util.Log
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -46,20 +47,25 @@ class IndicatorViaLazyRowState(
 
     init {
         job = CoroutineScope(Dispatchers.Main).launch {
-            lazyListState.scrollToItem(initialSelectedDotIndex)
+            if (totalDots.isNotEmpty()) {
+                lazyListState.scrollToItem(initialSelectedDotIndex)
+            }
+        }
+    }
+    suspend fun moveNext() {
+        if (totalDots.isNotEmpty()){
+            val nextDot = (currentDot + 1).coerceIn(0, totalDots.size - 1)
+            currentDot = nextDot
+            lazyListState.animateScrollToItem(nextDot)
         }
     }
 
-    suspend fun moveNext() {
-        val nextDot = (currentDot + 1).coerceIn(1, totalDots.size - 1)
-        currentDot = nextDot
-        lazyListState.animateScrollToItem(nextDot)
-    }
-
     suspend fun movePrevious() {
-        val previousDot = (currentDot - 1).coerceIn(0, totalDots.size - 2)
-        currentDot = previousDot
-        lazyListState.animateScrollToItem(previousDot)
+        if (totalDots.isNotEmpty()){
+            val previousDot = (currentDot - 1).coerceIn(0, totalDots.size - 1)
+            currentDot = previousDot
+            lazyListState.animateScrollToItem(previousDot)
+        }
     }
 
     protected fun finalize() {
@@ -96,7 +102,9 @@ fun IndicatorViaLazyRow(
             .height(selectedDotSize)
             .onGloballyPositioned {
                 with(density) {
-                    horizontalContentPadding = it.size.toSize().width.toDp().div(2) - selectedDotSize.div(2)
+                    if (state.totalDots.isNotEmpty()){
+                        horizontalContentPadding = it.size.toSize().width.toDp().div(2) - selectedDotSize.div(2)
+                    }
                 }
             },
         verticalAlignment = Alignment.CenterVertically,
@@ -104,28 +112,30 @@ fun IndicatorViaLazyRow(
         contentPadding = PaddingValues(horizontal = horizontalContentPadding),
         state = state.lazyListState
     ) {
-        itemsIndexed(state.totalDots) { index, dot ->
-            val distance = abs(index - state.currentDot)
-            val percentage = getDistancePercentage(distance, 6)
-            val animatedSize by animateDpAsState(
-                targetValue = if (state.currentDot == index) selectedDotSize else selectedDotSize / 2,
-                animationSpec = tween(animationDuration), label = "",
-            )
-            if (state.currentDot == index) {
-                Box(
-                    modifier = Modifier.size(selectedDotSize),
-                    contentAlignment = Alignment.CenterStart
-                ) {
+        if (state.totalDots.isNotEmpty()){
+            itemsIndexed(state.totalDots) { index, dot ->
+                val distance = abs(index - state.currentDot)
+                val percentage = getDistancePercentage(distance, 6)
+                val animatedSize by animateDpAsState(
+                    targetValue = if (state.currentDot == index) selectedDotSize else selectedDotSize / 2,
+                    animationSpec = tween(animationDuration), label = "",
+                )
+                if (state.currentDot == index) {
+                    Box(
+                        modifier = Modifier.size(selectedDotSize),
+                        contentAlignment = Alignment.CenterStart
+                    ) {
+                        Dot(
+                            size = animatedSize,
+                            color = dot.color
+                        )
+                    }
+                } else {
                     Dot(
-                        size = animatedSize,
+                        size = percentage * selectedDotSize,
                         color = dot.color
                     )
                 }
-            } else {
-                Dot(
-                    size = percentage * selectedDotSize,
-                    color = dot.color
-                )
             }
         }
     }
